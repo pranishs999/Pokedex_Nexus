@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Pokémon Knowledge Management Platform"
+version = "1.0.0"
+id = "artifacts/pkmp"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25137
+
+[services.development]
+run = "pnpm --filter @workspace/pkmp run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/pkmp", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/pkmp/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25137"
+BASE_PATH = "/"

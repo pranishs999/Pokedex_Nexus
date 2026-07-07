@@ -3,20 +3,40 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Pokémon Knowledge Management Platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: pokemon
+    description: Pokémon data
+  - name: types
+    description: Pokémon types
+  - name: abilities
+    description: Abilities
+  - name: moves
+    description: Moves
+  - name: evolutions
+    description: Evolution chains
+  - name: favorites
+    description: User favorites
+  - name: auth
+    description: Authentication
+  - name: search
+    description: Search
+  - name: cards
+    description: Trading cards
+  - name: stats
+    description: Stats and aggregates
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +44,881 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ─── Pokémon ────────────────────────────────────────────────────────────────
+
+  /pokemon:
+    get:
+      operationId: listPokemon
+      tags: [pokemon]
+      summary: List all Pokémon with optional filters
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 24 }
+        - name: generation
+          in: query
+          schema: { type: integer }
+        - name: type
+          in: query
+          schema: { type: string }
+        - name: legendary
+          in: query
+          schema: { type: boolean }
+        - name: mythical
+          in: query
+          schema: { type: boolean }
+        - name: sortBy
+          in: query
+          schema: { type: string, enum: [id, name, baseStatTotal, height, weight] }
+        - name: sortOrder
+          in: query
+          schema: { type: string, enum: [asc, desc] }
+      responses:
+        "200":
+          description: Paginated Pokémon list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PokemonListResponse"
+
+  /pokemon/{id}:
+    get:
+      operationId: getPokemon
+      tags: [pokemon]
+      summary: Get full Pokémon details by ID or name
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Full Pokémon details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PokemonDetail"
+        "404":
+          description: Not found
+
+  /pokemon/{id}/evolution-chain:
+    get:
+      operationId: getPokemonEvolutionChain
+      tags: [pokemon]
+      summary: Get evolution chain for a Pokémon
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Evolution chain
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvolutionChain"
+
+  /pokemon/{id}/forms:
+    get:
+      operationId: getPokemonForms
+      tags: [pokemon]
+      summary: Get all forms (regional, mega, gigantamax, alternate)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Pokémon forms list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PokemonForm"
+
+  /pokemon/{id}/moves:
+    get:
+      operationId: getPokemonMoves
+      tags: [pokemon]
+      summary: Get moves learned by a Pokémon
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Move list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PokemonMove"
+
+  /pokemon/{id}/cards:
+    get:
+      operationId: getPokemonCards
+      tags: [pokemon]
+      summary: Get trading cards featuring a Pokémon
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Trading cards list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TradingCard"
+
+  /pokemon/compare:
+    get:
+      operationId: comparePokemon
+      tags: [pokemon]
+      summary: Compare multiple Pokémon stats
+      parameters:
+        - name: ids
+          in: query
+          required: true
+          schema:
+            type: array
+            items: { type: string }
+      responses:
+        "200":
+          description: Comparison data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PokemonDetail"
+
+  # ─── Types ──────────────────────────────────────────────────────────────────
+
+  /types:
+    get:
+      operationId: listTypes
+      tags: [types]
+      summary: List all Pokémon types
+      responses:
+        "200":
+          description: Types list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PokemonType"
+
+  /types/{name}:
+    get:
+      operationId: getType
+      tags: [types]
+      summary: Get type details and effectiveness
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Type details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PokemonTypeDetail"
+
+  # ─── Abilities ──────────────────────────────────────────────────────────────
+
+  /abilities:
+    get:
+      operationId: listAbilities
+      tags: [abilities]
+      summary: List all abilities
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20 }
+      responses:
+        "200":
+          description: Abilities list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Ability"
+
+  /abilities/{id}:
+    get:
+      operationId: getAbility
+      tags: [abilities]
+      summary: Get ability details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Ability details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ability"
+
+  # ─── Moves ──────────────────────────────────────────────────────────────────
+
+  /moves:
+    get:
+      operationId: listMoves
+      tags: [moves]
+      summary: List all moves
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20 }
+        - name: type
+          in: query
+          schema: { type: string }
+        - name: category
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: Moves list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Move"
+
+  # ─── Search ─────────────────────────────────────────────────────────────────
+
+  /search:
+    get:
+      operationId: search
+      tags: [search]
+      summary: Global search across Pokémon, moves, abilities
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+        - name: type
+          in: query
+          schema: { type: string, enum: [pokemon, move, ability, all] }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 10 }
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResults"
+
+  # ─── Favorites ──────────────────────────────────────────────────────────────
+
+  /favorites:
+    get:
+      operationId: getFavorites
+      tags: [favorites]
+      summary: Get current user's favorite Pokémon
+      responses:
+        "200":
+          description: Favorites list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PokemonSummary"
+
+  /favorites/{pokemonId}:
+    post:
+      operationId: addFavorite
+      tags: [favorites]
+      summary: Add a Pokémon to favorites
+      parameters:
+        - name: pokemonId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FavoriteResult"
+    delete:
+      operationId: removeFavorite
+      tags: [favorites]
+      summary: Remove a Pokémon from favorites
+      parameters:
+        - name: pokemonId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FavoriteResult"
+
+  # ─── Auth ───────────────────────────────────────────────────────────────────
+
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Validation error
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout current user
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user profile
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Not authenticated
+    patch:
+      operationId: updateProfile
+      tags: [auth]
+      summary: Update current user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  # ─── Stats / Dashboard ───────────────────────────────────────────────────────
+
+  /stats/overview:
+    get:
+      operationId: getStatsOverview
+      tags: [stats]
+      summary: Get platform stats overview
+      responses:
+        "200":
+          description: Stats overview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatsOverview"
+
+  /stats/by-generation:
+    get:
+      operationId: getStatsByGeneration
+      tags: [stats]
+      summary: Get Pokémon counts by generation
+      responses:
+        "200":
+          description: Counts by generation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GenerationStat"
+
+  /stats/by-type:
+    get:
+      operationId: getStatsByType
+      tags: [stats]
+      summary: Get Pokémon counts by type
+      responses:
+        "200":
+          description: Counts by type
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TypeStat"
+
+  /pokemon/featured:
+    get:
+      operationId: getFeaturedPokemon
+      tags: [pokemon]
+      summary: Get featured/spotlight Pokémon for the home page
+      responses:
+        "200":
+          description: Featured Pokémon
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PokemonSummary"
+
+  /pokemon/random:
+    get:
+      operationId: getRandomPokemon
+      tags: [pokemon]
+      summary: Get a random Pokémon
+      responses:
+        "200":
+          description: Random Pokémon
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PokemonSummary"
+
 components:
   schemas:
     HealthStatus:
       type: object
       properties:
-        status:
-          type: string
-      required:
-        - status
+        status: { type: string }
+      required: [status]
 
+    # ── Pokémon ─────────────────────────────────────────────────────────────
+
+    PokemonSummary:
+      type: object
+      required: [id, nationalDexNumber, name, generation, types, spriteUrl, artworkUrl, baseStatTotal, isLegendary, isMythical]
+      properties:
+        id: { type: integer }
+        nationalDexNumber: { type: integer }
+        name: { type: string }
+        generation: { type: integer }
+        types:
+          type: array
+          items: { type: string }
+        spriteUrl: { type: string }
+        artworkUrl: { type: string }
+        baseStatTotal: { type: integer }
+        isLegendary: { type: boolean }
+        isMythical: { type: boolean }
+        isParadox: { type: boolean }
+        isUltraBeast: { type: boolean }
+        color: { type: string }
+        isFavorited: { type: boolean }
+
+    PokemonDetail:
+      type: object
+      required: [id, nationalDexNumber, name, generation, types, stats, spriteUrl, artworkUrl]
+      properties:
+        id: { type: integer }
+        nationalDexNumber: { type: integer }
+        name: { type: string }
+        category: { type: string }
+        description: { type: string }
+        generation: { type: integer }
+        height: { type: number }
+        weight: { type: number }
+        color: { type: string }
+        shape: { type: string }
+        habitat: { type: ["string", "null"] }
+        genderRatio: { type: ["number", "null"] }
+        captureRate: { type: integer }
+        baseFriendship: { type: integer }
+        growthRate: { type: string }
+        isLegendary: { type: boolean }
+        isMythical: { type: boolean }
+        isParadox: { type: boolean }
+        isUltraBeast: { type: boolean }
+        types:
+          type: array
+          items: { type: string }
+        stats:
+          $ref: "#/components/schemas/PokemonStats"
+        abilities:
+          type: array
+          items:
+            $ref: "#/components/schemas/PokemonAbility"
+        spriteUrl: { type: string }
+        artworkUrl: { type: string }
+        shinySpriteUrl: { type: ["string", "null"] }
+        shinyArtworkUrl: { type: ["string", "null"] }
+        typeEffectiveness:
+          $ref: "#/components/schemas/TypeEffectiveness"
+        eggGroups:
+          type: array
+          items: { type: string }
+        isFavorited: { type: boolean }
+
+    PokemonStats:
+      type: object
+      required: [hp, attack, defense, specialAttack, specialDefense, speed, total]
+      properties:
+        hp: { type: integer }
+        attack: { type: integer }
+        defense: { type: integer }
+        specialAttack: { type: integer }
+        specialDefense: { type: integer }
+        speed: { type: integer }
+        total: { type: integer }
+
+    PokemonAbility:
+      type: object
+      required: [name, isHidden]
+      properties:
+        name: { type: string }
+        description: { type: string }
+        isHidden: { type: boolean }
+
+    TypeEffectiveness:
+      type: object
+      properties:
+        doubleDamageTo:
+          type: array
+          items: { type: string }
+        halfDamageTo:
+          type: array
+          items: { type: string }
+        noDamageTo:
+          type: array
+          items: { type: string }
+        doubleDamageFrom:
+          type: array
+          items: { type: string }
+        halfDamageFrom:
+          type: array
+          items: { type: string }
+        noDamageFrom:
+          type: array
+          items: { type: string }
+
+    PokemonListResponse:
+      type: object
+      required: [data, total, page, limit]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/PokemonSummary"
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+
+    # ── Evolution ───────────────────────────────────────────────────────────
+
+    EvolutionChain:
+      type: object
+      required: [chain]
+      properties:
+        chain:
+          $ref: "#/components/schemas/EvolutionNode"
+
+    EvolutionNode:
+      type: object
+      required: [pokemon]
+      properties:
+        pokemon:
+          $ref: "#/components/schemas/PokemonSummary"
+        evolvesTo:
+          type: array
+          items:
+            $ref: "#/components/schemas/EvolutionNode"
+        evolutionDetails:
+          $ref: "#/components/schemas/EvolutionDetails"
+
+    EvolutionDetails:
+      type: object
+      properties:
+        trigger: { type: string }
+        minLevel: { type: ["integer", "null"] }
+        item: { type: ["string", "null"] }
+        friendship: { type: ["integer", "null"] }
+        timeOfDay: { type: ["string", "null"] }
+        heldItem: { type: ["string", "null"] }
+        specialRequirement: { type: ["string", "null"] }
+
+    # ── Forms ───────────────────────────────────────────────────────────────
+
+    PokemonForm:
+      type: object
+      required: [id, name, formType, spriteUrl, artworkUrl]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        formType:
+          type: string
+          enum: [normal, shiny, regional, mega, gigantamax, alternate]
+        region: { type: ["string", "null"] }
+        spriteUrl: { type: string }
+        artworkUrl: { type: string }
+        types:
+          type: array
+          items: { type: string }
+        stats:
+          $ref: "#/components/schemas/PokemonStats"
+
+    # ── Moves ───────────────────────────────────────────────────────────────
+
+    Move:
+      type: object
+      required: [id, name, type, category]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        type: { type: string }
+        category:
+          type: string
+          enum: [Physical, Special, Status]
+        power: { type: ["integer", "null"] }
+        accuracy: { type: ["integer", "null"] }
+        pp: { type: integer }
+        priority: { type: integer }
+        description: { type: string }
+
+    PokemonMove:
+      type: object
+      required: [move, learnMethod]
+      properties:
+        move:
+          $ref: "#/components/schemas/Move"
+        learnMethod:
+          type: string
+          enum: [level-up, tm, egg, tutor]
+        levelLearnedAt: { type: ["integer", "null"] }
+
+    # ── Types ───────────────────────────────────────────────────────────────
+
+    PokemonType:
+      type: object
+      required: [id, name, color]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        color: { type: string }
+
+    PokemonTypeDetail:
+      type: object
+      required: [id, name, color, effectiveness]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        color: { type: string }
+        effectiveness:
+          $ref: "#/components/schemas/TypeEffectiveness"
+        pokemonCount: { type: integer }
+
+    # ── Abilities ───────────────────────────────────────────────────────────
+
+    Ability:
+      type: object
+      required: [id, name, description]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        description: { type: string }
+        pokemonCount: { type: integer }
+
+    # ── Trading Cards ────────────────────────────────────────────────────────
+
+    TradingCard:
+      type: object
+      required: [id, name, set, cardNumber, rarity, imageUrl]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        set: { type: string }
+        cardNumber: { type: string }
+        hp: { type: ["integer", "null"] }
+        rarity: { type: string }
+        illustrator: { type: ["string", "null"] }
+        imageUrl: { type: string }
+
+    # ── Search ──────────────────────────────────────────────────────────────
+
+    SearchResult:
+      type: object
+      required: [id, name, category, imageUrl, url]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        category:
+          type: string
+          enum: [pokemon, move, ability]
+        imageUrl: { type: ["string", "null"] }
+        url: { type: string }
+        subtitle: { type: ["string", "null"] }
+
+    SearchResults:
+      type: object
+      required: [results, total]
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchResult"
+        total: { type: integer }
+
+    # ── Favorites ───────────────────────────────────────────────────────────
+
+    FavoriteResult:
+      type: object
+      required: [success, isFavorited]
+      properties:
+        success: { type: boolean }
+        isFavorited: { type: boolean }
+
+    # ── Auth ────────────────────────────────────────────────────────────────
+
+    RegisterInput:
+      type: object
+      required: [username, email, password]
+      properties:
+        username: { type: string, minLength: 3 }
+        email: { type: string, format: email }
+        password: { type: string, minLength: 8 }
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string }
+        password: { type: string }
+
+    ProfileUpdate:
+      type: object
+      properties:
+        username: { type: string, minLength: 3 }
+        email: { type: string, format: email }
+        avatarUrl: { type: string }
+
+    AuthResponse:
+      type: object
+      required: [user, token]
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token: { type: string }
+
+    User:
+      type: object
+      required: [id, username, email, role, createdAt]
+      properties:
+        id: { type: integer }
+        username: { type: string }
+        email: { type: string }
+        avatarUrl: { type: ["string", "null"] }
+        role:
+          type: string
+          enum: [user, admin]
+        favoriteCount: { type: integer }
+        createdAt: { type: string, format: date-time }
+
+    MessageResponse:
+      type: object
+      required: [message]
+      properties:
+        message: { type: string }
+
+    # ── Stats / Dashboard ────────────────────────────────────────────────────
+
+    StatsOverview:
+      type: object
+      required: [totalPokemon, totalMoves, totalAbilities, totalGenerations, totalTypes]
+      properties:
+        totalPokemon: { type: integer }
+        totalMoves: { type: integer }
+        totalAbilities: { type: integer }
+        totalGenerations: { type: integer }
+        totalTypes: { type: integer }
+        totalCards: { type: integer }
+
+    GenerationStat:
+      type: object
+      required: [generation, count]
+      properties:
+        generation: { type: integer }
+        count: { type: integer }
+        label: { type: string }
+
+    TypeStat:
+      type: object
+      required: [type, count, color]
+      properties:
+        type: { type: string }
+        count: { type: integer }
+        color: { type: string }

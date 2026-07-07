@@ -1,45 +1,54 @@
-# [Project name]
+# Pokémon Knowledge Management Platform (PKMP)
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A premium, full-stack fan-made Pokémon encyclopedia with comprehensive Gen I data, dark Pokédex UI, and rich interactive features.
 
-## Run & Operate
+## Architecture
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+### Monorepo packages
+- `artifacts/api-server` — Express + Drizzle ORM REST API (port 8080)
+- `artifacts/pkmp` — React + Vite frontend (port 25137)
+- `lib/db` — Drizzle schema + migrations (PostgreSQL)
+- `lib/api-spec` — OpenAPI spec (`openapi.yaml`)
+- `lib/api-client-react` — Orval-generated TanStack Query hooks
+- `lib/api-zod` — Orval-generated Zod schemas
 
-## Stack
+### Key tech choices
+- **Auth**: SHA-256 hash + in-memory session store (cookie-based, fan-app grade)
+- **Images**: PokeAPI CDN sprite/artwork URLs as static references
+- **UI**: Dark navy-black theme, electric gold accent, Framer Motion animations, glassmorphism panels
+- **Type system**: Full 18-type Gen I-IX chart with effectiveness pre-computed in routes
 
-- pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+## Running locally
+```
+pnpm install
+pnpm --filter @workspace/db run push   # apply schema
+pnpm run dev                           # starts all workflows
+```
 
-## Where things live
+## API endpoints
+- `GET /api/pokemon` — paginated list with type/generation filters
+- `GET /api/pokemon/:id` — full detail with types, abilities, moves
+- `GET /api/pokemon/:id/evolution-chain` — evolution tree
+- `GET /api/pokemon/:id/forms` — alternate/mega forms
+- `GET /api/pokemon/featured` — homepage featured grid
+- `GET /api/pokemon/random` — random Pokémon
+- `POST /api/pokemon/compare` — side-by-side stat comparison
+- `GET /api/types` — all 18 types with effectiveness
+- `GET /api/abilities` — paginated abilities
+- `GET /api/moves` — paginated moves with filters
+- `GET /api/search` — global search across Pokémon/moves/abilities
+- `GET/POST/DELETE /api/favorites` — user favorites (auth required)
+- `POST /api/auth/register|login|logout` — authentication
+- `GET/PATCH /api/auth/me` — profile management
+- `GET /api/stats/overview|by-generation|by-type` — dashboard aggregates
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+## Database
+PostgreSQL via Replit's managed database. Tables: `pokemon`, `types`, `abilities`, `moves`, `pokemon_types`, `pokemon_abilities`, `pokemon_moves`, `evolutions`, `forms`, `trading_cards`, `favorites`, `users`.
 
-## Architecture decisions
-
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
-
-## Product
-
-_Describe the high-level user-facing capabilities of this app once they exist._
+Seeded with: 151 Gen I Pokémon, 18 types, 49 abilities, 62 moves, full evolution chains (72 edges), 6 Mega forms.
 
 ## User preferences
-
-_Populate as you build — explicit user instructions worth remembering across sessions._
-
-## Gotchas
-
-_Populate as you build — sharp edges, "always run X before Y" rules._
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- Dark mode only — no light mode toggle
+- No emojis in UI
+- Tailwind v4 (native, no config file)
+- All API calls through generated hooks (`@workspace/api-client-react`), no raw fetch
