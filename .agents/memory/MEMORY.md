@@ -1,0 +1,1 @@
+- [PKMP project setup](pkmp-setup.md) — artifact ports, workflow commands, DB seed, auth bcrypt upgrade; proxy reads artifact.toml directly even without createArtifact registration

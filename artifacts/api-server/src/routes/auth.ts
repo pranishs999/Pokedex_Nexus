@@ -2,14 +2,11 @@ import { Router, type IRouter } from "express";
 import { eq } from "drizzle-orm";
 import { db, usersTable, favoritesTable } from "@workspace/db";
 import { RegisterBody, LoginBody, UpdateProfileBody } from "@workspace/api-zod";
-import { createHash } from "crypto";
+import bcrypt from "bcrypt";
 import { sql } from "drizzle-orm";
 
 const router: IRouter = Router();
-
-function hashPassword(password: string): string {
-  return createHash("sha256").update(password + "pkmp_salt_2024").digest("hex");
-}
+const BCRYPT_ROUNDS = 12;
 
 async function getUserWithFavoriteCount(userId: number) {
   const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId)).limit(1);
@@ -44,7 +41,7 @@ router.post("/auth/register", async (req: any, res): Promise<void> => {
     return;
   }
 
-  const passwordHash = hashPassword(password);
+  const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
   const [user] = await db.insert(usersTable).values({ username, email, passwordHash }).returning();
 
   req._newSession = { userId: user.id };
@@ -61,7 +58,6 @@ router.post("/auth/login", async (req: any, res): Promise<void> => {
     return;
   }
   const { email, password } = parsed.data;
-  const passwordHash = hashPassword(password);
 
   const [user] = await db
     .select()
@@ -69,7 +65,8 @@ router.post("/auth/login", async (req: any, res): Promise<void> => {
     .where(eq(usersTable.email, email))
     .limit(1);
 
-  if (!user || user.passwordHash !== passwordHash) {
+  const passwordMatch = user ? await bcrypt.compare(password, user.passwordHash) : false;
+  if (!user || !passwordMatch) {
     res.status(401).json({ error: "Invalid credentials" });
     return;
   }

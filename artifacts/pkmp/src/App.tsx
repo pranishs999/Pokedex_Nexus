@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 import Home from '@/pages/home';
 import Pokedex from '@/pages/pokedex';
@@ -41,14 +42,16 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-          <Router />
-        </WouterRouter>
-        <Toaster theme="dark" position="top-right" />
-      </AuthProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+            <Router />
+          </WouterRouter>
+          <Toaster theme="dark" position="top-right" />
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
