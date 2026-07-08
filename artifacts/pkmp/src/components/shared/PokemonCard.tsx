@@ -50,7 +50,7 @@ export function PokemonCard({ pokemon, index = 0 }: PokemonCardProps) {
       className="relative group block h-full cursor-pointer"
     >
       <Link href={`/pokemon/${pokemon.id}`} className="block h-full">
-        <div className="glass-card h-full rounded-2xl overflow-hidden relative border border-white/5 transition-colors duration-300 group-hover:border-primary/40">
+        <div className="card-premium h-full overflow-hidden relative transition-colors duration-300 group-hover:border-primary/40">
 
           {/* Type glow */}
           <div className="absolute top-0 right-0 w-36 h-36 rounded-full blur-3xl opacity-15 group-hover:opacity-30 transition-opacity"

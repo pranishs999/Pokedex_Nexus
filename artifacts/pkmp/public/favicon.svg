@@ -1,3 +1,40 @@
-<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="180" height="180" rx="36" fill="#FF3C00"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1e1b2e"/>
+      <stop offset="100%" stop-color="#0d0b1a"/>
+    </radialGradient>
+    <radialGradient id="topHalf" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#ff6b6b"/>
+      <stop offset="100%" stop-color="#c0392b"/>
+    </radialGradient>
+    <radialGradient id="botHalf" cx="50%" cy="70%" r="60%">
+      <stop offset="0%" stop-color="#2c2c54"/>
+      <stop offset="100%" stop-color="#1a1a3e"/>
+    </radialGradient>
+    <radialGradient id="btn" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="100%" stop-color="#ff6b6b"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- background rounded rect -->
+  <rect width="64" height="64" rx="14" ry="14" fill="url(#bg)"/>
+  <!-- top half of ball -->
+  <path d="M 10 32 A 22 22 0 0 1 54 32 Z" fill="url(#topHalf)"/>
+  <!-- bottom half of ball -->
+  <path d="M 10 32 A 22 22 0 0 0 54 32 Z" fill="url(#botHalf)"/>
+  <!-- divider line -->
+  <line x1="10" y1="32" x2="54" y2="32" stroke="#111" stroke-width="2.5"/>
+  <!-- outer ring -->
+  <circle cx="32" cy="32" r="22" fill="none" stroke="#333" stroke-width="1.5"/>
+  <!-- center button outer -->
+  <circle cx="32" cy="32" r="7" fill="#111" stroke="#ff6b6b" stroke-width="1.5" filter="url(#glow)"/>
+  <!-- center button inner -->
+  <circle cx="32" cy="32" r="4" fill="url(#btn)"/>
+  <!-- shine highlight -->
+  <ellipse cx="24" cy="20" rx="5" ry="3" fill="rgba(255,255,255,0.15)" transform="rotate(-20,24,20)"/>
 </svg>

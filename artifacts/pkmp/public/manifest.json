@@ -1,0 +1,49 @@
+{
+  "name": "Pokémon Knowledge Management Platform",
+  "short_name": "PKMP",
+  "description": "The ultimate Pokémon knowledge base — browse, compare, and track your favourites.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0d0b1a",
+  "theme_color": "#ff6b6b",
+  "lang": "en",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.svg",
+      "sizes": "180x180",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Browse Pokédex",
+      "short_name": "Pokédex",
+      "description": "Browse all 151 Pokémon",
+      "url": "/pokedex",
+      "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Compare Pokémon",
+      "short_name": "Compare",
+      "description": "Compare up to 4 Pokémon side-by-side",
+      "url": "/compare",
+      "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192" }]
+    }
+  ]
+}

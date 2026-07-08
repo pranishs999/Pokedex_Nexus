@@ -15,10 +15,9 @@ export function StatBar({ label, value, max = 255, color = 'var(--color-primary)
   
   // Calculate hue for color coding based on stat value (red -> yellow -> green)
   const getStatColor = (val: number) => {
-    if (val < 50) return 'hsl(0 80% 60%)'; // Red
-    if (val < 90) return 'hsl(45 100% 50%)'; // Yellow
-    if (val < 120) return 'hsl(120 70% 50%)'; // Greenish
-    return 'hsl(180 80% 50%)'; // Cyan/Blue for very high stats
+    if (val < 60) return 'hsl(350, 80%, 55%)'; // Weak (< 60)
+    if (val <= 99) return 'hsl(45, 95%, 50%)'; // Average (60-99)
+    return 'hsl(120, 75%, 45%)'; // Strong (>= 100)
   };
 
   const barColor = getStatColor(value);

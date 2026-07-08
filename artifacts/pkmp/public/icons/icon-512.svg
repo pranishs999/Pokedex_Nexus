@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#1e1240"/>
+      <stop offset="60%" stop-color="#0d0b1a"/>
+      <stop offset="100%" stop-color="#060412"/>
+    </radialGradient>
+    <radialGradient id="topBall" cx="45%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#ff8a80"/>
+      <stop offset="50%" stop-color="#e53935"/>
+      <stop offset="100%" stop-color="#9b1b1b"/>
+    </radialGradient>
+    <radialGradient id="botBall" cx="55%" cy="70%" r="65%">
+      <stop offset="0%" stop-color="#3d3573"/>
+      <stop offset="60%" stop-color="#1e1a4a"/>
+      <stop offset="100%" stop-color="#0d0b2a"/>
+    </radialGradient>
+    <radialGradient id="btnGrad" cx="38%" cy="32%" r="65%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#ffb3b3"/>
+      <stop offset="100%" stop-color="#e53935"/>
+    </radialGradient>
+    <radialGradient id="glowRing" cx="50%" cy="50%" r="50%">
+      <stop offset="70%" stop-color="transparent"/>
+      <stop offset="100%" stop-color="#ff6b6b" stop-opacity="0.3"/>
+    </radialGradient>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="outerGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- circuit pattern -->
+    <pattern id="circuit" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="10" x2="20" y2="10" stroke="#ff6b6b" stroke-width="0.4" stroke-opacity="0.3"/>
+      <line x1="10" y1="0" x2="10" y2="20" stroke="#ff6b6b" stroke-width="0.4" stroke-opacity="0.3"/>
+      <circle cx="10" cy="10" r="1.5" fill="none" stroke="#ff6b6b" stroke-width="0.4" stroke-opacity="0.4"/>
+    </pattern>
+  </defs>
+
+  <!-- Rounded background -->
+  <rect width="180" height="180" rx="40" ry="40" fill="url(#bg)"/>
+
+  <!-- subtle circuit overlay on dark area -->
+  <rect width="180" height="180" rx="40" ry="40" fill="url(#circuit)" opacity="0.5"/>
+
+  <!-- outer glow ring -->
+  <circle cx="90" cy="82" r="62" fill="none" stroke="#ff6b6b" stroke-width="1" stroke-opacity="0.25" filter="url(#outerGlow)"/>
+
+  <!-- Pokéball top half -->
+  <clipPath id="topClip">
+    <rect x="28" y="20" width="124" height="62"/>
+  </clipPath>
+  <circle cx="90" cy="82" r="62" fill="url(#topBall)" clip-path="url(#topClip)"/>
+
+  <!-- shine on top half -->
+  <ellipse cx="70" cy="45" rx="20" ry="10" fill="rgba(255,255,255,0.12)" transform="rotate(-15,70,45)"/>
+  <ellipse cx="60" cy="38" rx="8" ry="4" fill="rgba(255,255,255,0.18)" transform="rotate(-10,60,38)"/>
+
+  <!-- Pokéball bottom half -->
+  <clipPath id="botClip">
+    <rect x="28" y="82" width="124" height="62"/>
+  </clipPath>
+  <circle cx="90" cy="82" r="62" fill="url(#botBall)" clip-path="url(#botClip)"/>
+
+  <!-- subtle circuit lines on bottom half -->
+  <g clip-path="url(#botClip)" opacity="0.6">
+    <line x1="50" y1="100" x2="80" y2="100" stroke="#9b8fdf" stroke-width="0.8"/>
+    <line x1="80" y1="100" x2="80" y2="115" stroke="#9b8fdf" stroke-width="0.8"/>
+    <circle cx="50" cy="100" r="2.5" fill="none" stroke="#9b8fdf" stroke-width="0.8"/>
+    <line x1="100" y1="110" x2="130" y2="110" stroke="#9b8fdf" stroke-width="0.8"/>
+    <line x1="100" y1="110" x2="100" y2="125" stroke="#9b8fdf" stroke-width="0.8"/>
+    <circle cx="130" cy="110" r="2.5" fill="none" stroke="#9b8fdf" stroke-width="0.8"/>
+    <line x1="60" y1="130" x2="90" y2="130" stroke="#9b8fdf" stroke-width="0.8"/>
+    <circle cx="60" cy="130" r="2" fill="none" stroke="#9b8fdf" stroke-width="0.8"/>
+    <!-- circuit lines on top red too -->
+    <line x1="110" y1="55" x2="140" y2="55" stroke="#ff8a80" stroke-width="0.6" stroke-opacity="0.5"/>
+    <line x1="110" y1="55" x2="110" y2="70" stroke="#ff8a80" stroke-width="0.6" stroke-opacity="0.5"/>
+    <circle cx="140" cy="55" r="2" fill="none" stroke="#ff8a80" stroke-width="0.6" stroke-opacity="0.5"/>
+  </g>
+
+  <!-- divider band -->
+  <rect x="28" y="79" width="124" height="6" fill="#111" rx="2"/>
+
+  <!-- outer ball border -->
+  <circle cx="90" cy="82" r="62" fill="none" stroke="#2a2a3e" stroke-width="2"/>
+
+  <!-- center button glow aura -->
+  <circle cx="90" cy="82" r="20" fill="#ff6b6b" opacity="0.15" filter="url(#outerGlow)"/>
+
+  <!-- center button ring -->
+  <circle cx="90" cy="82" r="17" fill="#0d0b1a" stroke="#ff6b6b" stroke-width="2.5" filter="url(#softGlow)"/>
+
+  <!-- center button inner -->
+  <circle cx="90" cy="82" r="10" fill="url(#btnGrad)"/>
+  <!-- button highlight -->
+  <ellipse cx="86" cy="78" rx="4" ry="2.5" fill="rgba(255,255,255,0.45)" transform="rotate(-20,86,78)"/>
+
+  <!-- PKMP text -->
+  <text
+    x="90"
+    y="160"
+    text-anchor="middle"
+    font-family="'Rajdhani', 'Inter', sans-serif"
+    font-weight="700"
+    font-size="22"
+    letter-spacing="4"
+    fill="#ff6b6b"
+    filter="url(#softGlow)"
+  >PKMP</text>
+  <!-- subtle text glow -->
+  <text
+    x="90"
+    y="160"
+    text-anchor="middle"
+    font-family="'Rajdhani', 'Inter', sans-serif"
+    font-weight="700"
+    font-size="22"
+    letter-spacing="4"
+    fill="rgba(255,107,107,0.4)"
+    filter="url(#outerGlow)"
+  >PKMP</text>
+</svg>

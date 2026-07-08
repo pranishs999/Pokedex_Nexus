@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
@@ -65,6 +65,18 @@
   --color-type-dark: var(--type-dark);
   --color-type-steel: var(--type-steel);
   --color-type-fairy: var(--type-fairy);
+
+  --color-bg-base: hsl(220, 20%, 8%);
+  --color-bg-surface: hsl(220, 20%, 14%);
+  --color-bg-surface-glass: hsla(220, 20%, 14%, 0.6);
+  --color-border-subtle: hsl(220, 15%, 22%);
+  --color-text-primary: hsl(210, 20%, 98%);
+  --color-text-secondary: hsl(210, 10%, 70%);
+  --color-accent-red: hsl(350, 80%, 55%);
+  --color-accent-blue: hsl(200, 85%, 60%);
+
+  --backdrop-blur-glass: blur(12px);
+  --shadow-premium: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 :root {
@@ -102,27 +114,27 @@
   --sidebar-foreground: 210 20% 95%;
   --sidebar-border: 220 15% 16%;
 
-  --app-font-sans: 'Inter', sans-serif;
+  --app-font-sans: 'Outfit', 'Inter', sans-serif;
   --app-font-heading: 'Rajdhani', sans-serif;
 
-  --type-normal: #A8A878;
-  --type-fire: #F08030;
-  --type-water: #6890F0;
-  --type-electric: #F8D030;
-  --type-grass: #78C850;
-  --type-ice: #98D8D8;
-  --type-fighting: #C03028;
-  --type-poison: #A040A0;
-  --type-ground: #E0C068;
-  --type-flying: #A890F0;
-  --type-psychic: #F85888;
-  --type-bug: #A8B820;
-  --type-rock: #B8A038;
-  --type-ghost: #705898;
-  --type-dragon: #7038F8;
-  --type-dark: #705848;
-  --type-steel: #B8B8D0;
-  --type-fairy: #EE99AC;
+  --type-normal: hsl(60, 5%, 60%);
+  --type-fire: hsl(18, 90%, 55%);
+  --type-water: hsl(210, 90%, 55%);
+  --type-electric: hsl(45, 95%, 50%);
+  --type-grass: hsl(120, 75%, 45%);
+  --type-ice: hsl(180, 75%, 65%);
+  --type-fighting: hsl(0, 85%, 40%);
+  --type-poison: hsl(300, 70%, 40%);
+  --type-ground: hsl(35, 75%, 60%);
+  --type-flying: hsl(250, 80%, 70%);
+  --type-psychic: hsl(340, 95%, 55%);
+  --type-bug: hsl(75, 80%, 45%);
+  --type-rock: hsl(40, 60%, 45%);
+  --type-ghost: hsl(260, 50%, 40%);
+  --type-dragon: hsl(255, 85%, 50%);
+  --type-dark: hsl(20, 20%, 25%);
+  --type-steel: hsl(210, 20%, 70%);
+  --type-fairy: hsl(330, 85%, 70%);
 }
 
 @layer base {
@@ -162,6 +174,27 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.card-premium {
+  background: var(--color-bg-surface-glass);
+  border: 1px solid var(--color-border-subtle);
+  backdrop-filter: var(--backdrop-blur-glass);
+  box-shadow: var(--shadow-premium);
+  border-radius: 0.75rem; /* rounded-xl */
+}
+
+.input-premium {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.input-premium:focus {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 2px;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.3; }
 }
 
 /* Custom scrollbar for webkit */
