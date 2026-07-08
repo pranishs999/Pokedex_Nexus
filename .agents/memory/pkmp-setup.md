@@ -22,7 +22,7 @@ Artifacts exist in `.replit-artifact/artifact.toml` but are NOT registered via `
 Schema: push with `pnpm --filter @workspace/db run push`
 Seed: `pnpm --filter @workspace/db run seed` (runs `lib/db/src/seed.ts`)
 Seed is idempotent — it deletes and re-inserts all data.
-Currently seeded: 151 Gen I Pokémon, 18 types, 59 abilities, 63 moves, 65 evolutions, 6 Mega forms.
+Currently seeded: 1025 Pokémon (Gen I–IX), 18 types, 284 abilities, 484 evolutions, 326 alternate forms (Mega, Gmax, Regional). Seed fetches live from PokéAPI — takes ~2–4 min to run.
 
 ## Auth
 
