@@ -8,23 +8,17 @@ import {
   useGetPokemonMoves,
   useGetPokemonCards,
   type EvolutionNode,
-  useAddFavorite,
-  useRemoveFavorite
 } from '@workspace/api-client-react';
-import { useQueryClient } from '@tanstack/react-query';
-import { getGetFavoritesQueryKey, getGetPokemonQueryKey } from '@workspace/api-client-react';
+import { useFavorites } from '@/hooks/useFavorites';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { TypeBadge } from '@/components/shared/TypeBadge';
 import { StatBar } from '@/components/shared/StatBar';
 import { formatNumber, cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, Heart, Shield, Sword, Activity, Zap, Wind } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
 
 export default function PokemonDetail() {
   const { id } = useParams<{ id: string }>();
-  const { isAuthenticated } = useAuth();
-  const queryClient = useQueryClient();
+  const { isLiked, toggle: toggleFavorite } = useFavorites();
   const [activeTab, setActiveTab] = useState<'stats' | 'moves' | 'forms' | 'cards'>('stats');
 
   const { data: pokemon, isLoading } = useGetPokemon(id || '', {
@@ -47,31 +41,9 @@ export default function PokemonDetail() {
     query: { enabled: !!id && activeTab === 'cards', queryKey: [] as unknown[] } as any
   });
 
-  const addFavMutation = useAddFavorite();
-  const removeFavMutation = useRemoveFavorite();
-
   const handleFavoriteClick = () => {
-    if (!isAuthenticated) {
-      toast.error('Please login to favorite Pokémon');
-      return;
-    }
     if (!pokemon) return;
-
-    if (pokemon.isFavorited) {
-      removeFavMutation.mutate({ pokemonId: pokemon.id }, {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: getGetFavoritesQueryKey() });
-          queryClient.invalidateQueries({ queryKey: getGetPokemonQueryKey(id || '') });
-        }
-      });
-    } else {
-      addFavMutation.mutate({ pokemonId: pokemon.id }, {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: getGetFavoritesQueryKey() });
-          queryClient.invalidateQueries({ queryKey: getGetPokemonQueryKey(id || '') });
-        }
-      });
-    }
+    toggleFavorite(pokemon.nationalDexNumber);
   };
 
   if (isLoading || !pokemon) {
@@ -162,12 +134,11 @@ export default function PokemonDetail() {
               <button 
                 onClick={handleFavoriteClick}
                 className={cn(
-                  "p-3 rounded-full backdrop-blur-md border transition-all duration-300",
-                  isAuthenticated ? "bg-black/40 border-white/10 hover:bg-white/10" : "opacity-50 cursor-not-allowed bg-black/40 border-white/5",
-                  pokemon.isFavorited && "border-primary/50 bg-primary/10"
+                  "p-3 rounded-full backdrop-blur-md border transition-all duration-300 bg-black/40 border-white/10 hover:bg-white/10",
+                  isLiked(pokemon.nationalDexNumber) && "border-primary/50 bg-primary/10"
                 )}
               >
-                <Heart size={24} className={cn("transition-colors", pokemon.isFavorited ? "fill-primary text-primary" : "text-white/60")} />
+                <Heart size={24} className={cn("transition-colors", isLiked(pokemon.nationalDexNumber) ? "fill-primary text-primary" : "text-white/60")} />
               </button>
             </div>
 

@@ -12,10 +12,6 @@ import PokemonDetail from '@/pages/pokemon-detail';
 import SearchPage from '@/pages/search';
 import ComparePage from '@/pages/compare';
 import Favorites from '@/pages/favorites';
-import Login from '@/pages/login';
-import Register from '@/pages/register';
-import Profile from '@/pages/profile';
-import Admin from '@/pages/admin';
 import NotFound from '@/pages/not-found';
 
 const queryClient = new QueryClient();
@@ -30,10 +26,6 @@ function Router() {
         <Route path="/search" component={SearchPage} />
         <Route path="/compare" component={ComparePage} />
         <Route path="/favorites" component={Favorites} />
-        <Route path="/login" component={Login} />
-        <Route path="/register" component={Register} />
-        <Route path="/profile" component={Profile} />
-        <Route path="/admin" component={Admin} />
         <Route component={NotFound} />
       </Switch>
     </AppLayout>

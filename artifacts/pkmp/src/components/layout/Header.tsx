@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Menu, Search, User as UserIcon } from 'lucide-react';
+import { Menu, Search } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
-import { useAuth } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
 
 export function Header({ setMobileOpen }: { setMobileOpen: (v: boolean) => void }) {
-  const { user, isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [, setLocation] = useLocation();
 
@@ -42,26 +40,6 @@ export function Header({ setMobileOpen }: { setMobileOpen: (v: boolean) => void 
         <Link href="/search" className="sm:hidden p-2 text-muted-foreground hover:text-white">
           <Search size={20} />
         </Link>
-
-        {isAuthenticated ? (
-          <Link href="/profile" className="flex items-center gap-3 group">
-            <div className="hidden md:flex flex-col items-end">
-              <span className="text-sm font-medium text-white group-hover:text-primary transition-colors">{user?.username}</span>
-              <span className="text-xs text-primary">{user?.favoriteCount} favorites</span>
-            </div>
-            <div className="w-10 h-10 rounded-full border-2 border-primary/50 bg-black/50 overflow-hidden flex items-center justify-center group-hover:border-primary transition-colors">
-              {user?.avatarUrl ? (
-                <img src={user.avatarUrl} alt={user.username} className="w-full h-full object-cover" />
-              ) : (
-                <UserIcon className="text-muted-foreground" size={20} />
-              )}
-            </div>
-          </Link>
-        ) : (
-          <Link href="/login" className="inline-flex items-center justify-center h-10 px-6 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors shadow-[0_0_15px_rgba(255,204,0,0.3)] hover:shadow-[0_0_20px_rgba(255,204,0,0.5)]">
-            Log In
-          </Link>
-        )}
       </div>
     </header>
   );
