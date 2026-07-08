@@ -10,7 +10,7 @@ interface StatBarProps {
   className?: string;
 }
 
-export function StatBar({ label, value, max = 255, color = 'var(--color-primary)', className }: StatBarProps) {
+export function StatBar({ label, value, max = 255, color: _color = 'var(--color-primary)', className }: StatBarProps) {
   const percentage = Math.min(100, Math.max(0, (value / max) * 100));
   
   // Calculate hue for color coding based on stat value (red -> yellow -> green)

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, Link } from 'wouter';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   useGetPokemon,
   useGetPokemonEvolutionChain,
@@ -16,7 +16,7 @@ import { StatBar } from '@/components/shared/StatBar';
 import { formatNumber, cn } from '@/lib/utils';
 import {
   ChevronLeft, ChevronRight, Heart, Activity, Sword, Zap, Shield,
-  Egg, ArrowRight, Eye, BookOpen,
+  Egg, ArrowRight, Eye,
 } from 'lucide-react';
 import {
   RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, Tooltip,

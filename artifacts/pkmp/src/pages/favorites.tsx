@@ -7,7 +7,6 @@ import { Heart, HeartOff, Search, SortAsc, X } from 'lucide-react';
 import { Link } from 'wouter';
 import { useFavorites } from '@/hooks/useFavorites';
 import { TypeBadge } from '@/components/shared/TypeBadge';
-import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
 const SORT_OPTIONS = [

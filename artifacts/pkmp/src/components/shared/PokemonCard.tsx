@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'wouter';
-import { Heart, Scale } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { TypeBadge } from './TypeBadge';
 import { formatNumber, cn } from '@/lib/utils';

@@ -1,6 +1,5 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { type PokemonTypeDetail } from '@workspace/api-client-react';
 
 interface TypeBadgeProps {
   type: string;

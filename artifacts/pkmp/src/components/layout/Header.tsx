@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, Search } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
-import { motion } from 'framer-motion';
 
 export function Header({ setMobileOpen }: { setMobileOpen: (v: boolean) => void }) {
   const [searchQuery, setSearchQuery] = useState('');

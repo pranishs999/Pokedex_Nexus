@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { useComparePokemon } from '@workspace/api-client-react';
 import { PageTransition } from '@/components/shared/PageTransition';
-import { StatBar } from '@/components/shared/StatBar';
 import { TypeBadge } from '@/components/shared/TypeBadge';
 import { Plus, X, BarChart2 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 // Mock simple selection for demo purposes. In a real app, this would use the search endpoint to pick.

@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Link, useLocation } from 'wouter';
+import React from 'react';
+import { Link } from 'wouter';
 import { motion } from 'framer-motion';
 import {
   useGetFeaturedPokemon,
@@ -56,7 +56,7 @@ function SectionHeader({ title, subtitle, href }: { title: string; subtitle?: st
 }
 
 export default function Home() {
-  const [, setLocation] = useLocation();
+
   const { data: featured, isLoading: loadingFeatured } = useGetFeaturedPokemon();
   const { data: stats } = useGetStatsOverview();
   const { data: genStats } = useGetStatsByGeneration() as { data: Array<{ generation: number; label: string; count: number }> | undefined };
@@ -188,7 +188,7 @@ export default function Home() {
         <SectionHeader title="Legendary & Mythical" subtitle="The rarest Pokémon in existence" href="/pokedex?rarity=legendary" />
         <Carousel opts={{ align: 'start', loop: true }} className="w-full">
           <CarouselContent className="-ml-4">
-            {SHOWCASE_LEGENDARIES.map((dex, i) => (
+            {SHOWCASE_LEGENDARIES.map((dex) => (
               <CarouselItem key={dex} className="pl-4 basis-1/3 sm:basis-1/4 lg:basis-1/6">
                 <Link href={`/pokemon/${dex}`}>
                   <motion.div whileHover={{ y: -6, scale: 1.04 }}

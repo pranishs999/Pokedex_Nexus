@@ -26,7 +26,6 @@ export default function SearchPage() {
       setQuery(q);
       setDebouncedQuery(q);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   const { data: searchResults, isLoading } = useSearch({

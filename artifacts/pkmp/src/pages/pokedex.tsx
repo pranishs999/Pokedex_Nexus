@@ -5,7 +5,6 @@ import { PokemonCard } from '@/components/shared/PokemonCard';
 import { SkeletonCard } from '@/components/shared/SkeletonCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ChevronLeft, ChevronRight, SlidersHorizontal, LayoutGrid, List, X } from 'lucide-react';
-import { useLocation } from 'wouter';
 import { cn } from '@/lib/utils';
 
 const GENS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -26,7 +25,7 @@ const RARITY_OPTIONS = [
 ];
 
 export default function Pokedex() {
-  const [, setLocation] = useLocation();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [params, setParams] = useState<ListPokemonParams & { rarity?: string }>({
