@@ -66,6 +66,15 @@ export function normalizePokemonDetail(pokemon: any, species: any) {
 
   return {
     ...base,
+    stats: {
+      hp: base.statHp,
+      attack: base.statAttack,
+      defense: base.statDefense,
+      specialAttack: base.statSpecialAttack,
+      specialDefense: base.statSpecialDefense,
+      speed: base.statSpeed,
+      total: base.baseStatTotal,
+    },
     category,
     description,
     height: pokemon.height ?? 0,
