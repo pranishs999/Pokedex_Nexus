@@ -7,7 +7,16 @@ import router from "./routes";
 import { logger } from "./lib/logger";
 import { pokeapiService } from "./pokeapi/index.js";
 
-const SESSION_SECRET = process.env.SESSION_SECRET ?? "pkmp-dev-secret-change-in-production";
+const SESSION_SECRET = process.env.SESSION_SECRET;
+if (!SESSION_SECRET) {
+  throw new Error("SESSION_SECRET must be set. Did you forget to configure the secret?");
+}
+
+const allowedOrigins = [
+  ...(process.env.REPLIT_DOMAINS?.split(",").map((d) => `https://${d.trim()}`) ?? []),
+  ...(process.env.REPLIT_DEV_DOMAIN ? [`https://${process.env.REPLIT_DEV_DOMAIN}`] : []),
+  ...(process.env.NODE_ENV !== "production" ? ["http://localhost:25137", "http://localhost:5173"] : []),
+];
 
 const app: Express = express();
 
@@ -30,7 +39,19 @@ app.use(
     },
   }),
 );
-app.use(cors({ origin: true, credentials: true }));
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Allow same-origin/non-browser requests (no Origin header) and requests from allowlisted origins.
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(SESSION_SECRET));

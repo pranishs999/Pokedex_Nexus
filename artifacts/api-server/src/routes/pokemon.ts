@@ -61,15 +61,14 @@ router.get("/pokemon", async (req, res): Promise<void> => {
   const parsed = ListPokemonQueryParams.safeParse(req.query);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
 
-  const { page = 1, limit = 20, generation, type, rarity, sort } = parsed.data;
+  const { page = 1, limit = 20, generation, type, sortBy } = parsed.data;
   const favoriteDexNums = await getUserFavorites(req);
 
   const result = pokeapiService.listPokemon({
     page, limit,
     generation: generation ? Number(generation) : undefined,
     type: type ?? undefined,
-    rarity: rarity ?? undefined,
-    sort: sort ?? "id",
+    sort: sortBy ?? "id",
     favoriteDexNums,
   });
 
@@ -96,10 +95,10 @@ router.get("/pokemon/compare", async (req, res): Promise<void> => {
   const parsed = ComparePokemonQueryParams.safeParse(req.query);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
 
-  const ids = parsed.data.ids.split(",").map(s => s.trim());
+  const ids: string[] = parsed.data.ids.map((s: string) => s.trim());
   const favoriteDexNums = await getUserFavorites(req);
 
-  const pokemon = await Promise.all(ids.map(id => pokeapiService.getPokemon(isNaN(Number(id)) ? id : Number(id))));
+  const pokemon = await Promise.all(ids.map((id: string) => pokeapiService.getPokemon(isNaN(Number(id)) ? id : Number(id))));
   const results = pokemon.filter(Boolean).map(p => ({
     ...p!,
     isFavorited: favoriteDexNums.has(p!.nationalDexNumber),
