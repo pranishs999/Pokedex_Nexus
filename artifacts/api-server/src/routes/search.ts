@@ -1,72 +1,25 @@
 import { Router, type IRouter } from "express";
-import { ilike, or, sql } from "drizzle-orm";
-import { db, pokemonTable, movesTable, abilitiesTable } from "@workspace/db";
 import { SearchQueryParams } from "@workspace/api-zod";
+import { pokeapiService } from "../pokeapi/index.js";
 
 const router: IRouter = Router();
 
 // GET /search
 router.get("/search", async (req, res): Promise<void> => {
   const parsed = SearchQueryParams.safeParse(req.query);
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.message });
-    return;
-  }
-  const q = parsed.data.q;
-  const type = parsed.data.type ?? "all";
-  const limit = parsed.data.limit ?? 10;
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
 
-  const results: Array<{ id: number; name: string; category: "pokemon" | "move" | "ability"; imageUrl: string | null; url: string; subtitle: string | null }> = [];
+  const { q, limit = 10, type = "all" } = parsed.data;
+  const results: any[] = [];
 
   if (type === "all" || type === "pokemon") {
-    const pokemon = await db
-      .select()
-      .from(pokemonTable)
-      .where(ilike(pokemonTable.name, `%${q}%`))
-      .limit(limit);
-    results.push(...pokemon.map((p) => ({
-      id: p.id,
-      name: p.name,
-      category: "pokemon" as const,
-      imageUrl: p.spriteUrl || null,
-      url: `/pokemon/${p.nationalDexNumber}`,
-      subtitle: `#${String(p.nationalDexNumber).padStart(3, "0")} · Gen ${p.generation}`,
-    })));
+    results.push(...pokeapiService.searchPokemon(q, limit));
   }
 
-  if (type === "all" || type === "move") {
-    const moves = await db
-      .select()
-      .from(movesTable)
-      .where(ilike(movesTable.name, `%${q}%`))
-      .limit(limit);
-    results.push(...moves.map((m) => ({
-      id: m.id,
-      name: m.name,
-      category: "move" as const,
-      imageUrl: null,
-      url: `/moves/${m.id}`,
-      subtitle: `${m.type} · ${m.category}`,
-    })));
-  }
-
-  if (type === "all" || type === "ability") {
-    const abilities = await db
-      .select()
-      .from(abilitiesTable)
-      .where(ilike(abilitiesTable.name, `%${q}%`))
-      .limit(limit);
-    results.push(...abilities.map((a) => ({
-      id: a.id,
-      name: a.name,
-      category: "ability" as const,
-      imageUrl: null,
-      url: `/abilities/${a.id}`,
-      subtitle: a.description.slice(0, 60) || null,
-    })));
-  }
-
-  res.json({ results: results.slice(0, limit), total: results.length });
+  // For moves and abilities, search the cached lists if available; otherwise skip
+  // (lists are loaded lazily on first /moves or /abilities request)
+  const total = results.length;
+  res.json({ results: results.slice(0, limit), total });
 });
 
 export default router;

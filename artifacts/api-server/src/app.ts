@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import { randomUUID } from "crypto";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import { pokeapiService } from "./pokeapi/index.js";
 
 const SESSION_SECRET = process.env.SESSION_SECRET ?? "pkmp-dev-secret-change-in-production";
 
@@ -78,5 +79,8 @@ app.use((req: any, res: any, next) => {
 });
 
 app.use("/api", router);
+
+// Start background loading of all Pokémon from PokéAPI
+pokeapiService.init().catch(err => logger.error({ err }, "PokeAPI init failed"));
 
 export default app;

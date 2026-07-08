@@ -17,16 +17,17 @@ Artifacts exist in `.replit-artifact/artifact.toml` but are NOT registered via `
 
 **Why port 25137 matters**: The pkmp artifact.toml hardcodes PORT=25137. If the workflow runs on any other port (e.g. 3000), the proxy routes to 25137 and the page appears blank. Always match the artifact.toml localPort.
 
-## Database
+## Data architecture
 
-Schema: push with `pnpm --filter @workspace/db run push`
-Seed: `pnpm --filter @workspace/db run seed` (runs `lib/db/src/seed.ts`)
-Seed is idempotent — it deletes and re-inserts all data.
-Currently seeded: 1025 Pokémon (Gen I–IX), 18 types, 284 abilities, 484 evolutions, 326 alternate forms (Mega, Gmax, Regional). Seed fetches live from PokéAPI — takes ~2–4 min to run.
+Pokémon data comes from PokéAPI at runtime — no seed script needed for pokemon data.
+The `PokeAPIService` (artifacts/api-server/src/pokeapi/service.ts) loads all 1025 Pokémon
+into memory on server startup (batches of 30, takes ~60s). Routes query the in-memory cache.
+
+Local DB (PostgreSQL) stores only: users, favorites.
+Favorites schema uses `dex_number` (integer, no FK) — NOT `pokemon_id`.
 
 ## Auth
 
-Password hashing upgraded from SHA-256 (static salt) to bcrypt (12 rounds).
-Existing users with SHA-256 hashes cannot log in until rehash migration is done (Task #2).
+Password hashing: bcrypt (12 rounds).
 
 **Why:** SHA-256 with static salt has no work factor — vulnerable to offline cracking.
