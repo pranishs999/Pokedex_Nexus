@@ -41,7 +41,7 @@ export default function Favorites() {
     let list = [...favoritePokemon] as any[];
     if (search.trim()) {
       const q = search.toLowerCase();
-      list = list.filter((p: any) => p.name.toLowerCase().includes(q) || String(p.nationalDexNumber).includes(q));
+      list = list.filter((p: any) => p.name?.toLowerCase().includes(q) || String(p.nationalDexNumber).includes(q));
     }
     switch (sort) {
       case 'id': list.sort((a: any, b: any) => a.nationalDexNumber - b.nationalDexNumber); break;
@@ -187,7 +187,7 @@ export default function Favorites() {
                       <motion.div initial={{ width: 0 }} animate={{ width: `${(count / Math.max(typeDistribution[0]?.[1] ?? 1, 1)) * 100}%` }}
                         transition={{ duration: 0.8, ease: 'easeOut' }}
                         className="h-full rounded-full"
-                        style={{ backgroundColor: `var(--color-type-${type.toLowerCase()})` }} />
+                        style={{ backgroundColor: `var(--color-type-${type?.toLowerCase() || 'normal'})` }} />
                     </div>
                     <span className="text-xs text-muted-foreground w-6 text-right">{count}</span>
                   </div>

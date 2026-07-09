@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     query: {
       retry: false,
       staleTime: 5 * 60 * 1000,
-    },
+    } as any,
     request: {
       credentials: "include",
     } as any,

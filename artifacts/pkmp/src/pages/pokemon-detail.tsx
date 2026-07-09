@@ -44,19 +44,19 @@ export default function PokemonDetail() {
   });
 
   const { data: pokemon, isLoading } = useGetPokemon(id || '', {
-    query: { enabled: !!id, queryKey: [] as unknown[] } as any,
+    query: { enabled: !!id } as any,
   });
   const { data: evoChain } = useGetPokemonEvolutionChain(id || '', {
-    query: { enabled: !!id, queryKey: [] as unknown[] } as any,
+    query: { enabled: !!id } as any,
   });
   const { data: forms } = useGetPokemonForms(id || '', {
-    query: { enabled: !!id, queryKey: [] as unknown[] } as any,
+    query: { enabled: !!id } as any,
   });
   const { data: moves } = useGetPokemonMoves(id || '', {
-    query: { enabled: !!id, queryKey: [] as unknown[] } as any,
+    query: { enabled: !!id } as any,
   });
   const { data: cards } = useGetPokemonCards(id || '', {
-    query: { enabled: !!id, queryKey: [] as unknown[] } as any,
+    query: { enabled: !!id } as any,
   });
 
   // Intersection observer to track active section
@@ -86,7 +86,7 @@ export default function PokemonDetail() {
     );
   }
 
-  const mainType = pokemon.types[0]?.toLowerCase() || 'normal';
+  const mainType = pokemon.types?.[0]?.toLowerCase() ?? 'normal';
   const favorited = isLiked(pokemon.nationalDexNumber);
   const idNum = Number(id);
 
@@ -271,7 +271,7 @@ export default function PokemonDetail() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
-                    {moves.map((pm: any, i: number) => (
+                    {(moves ?? []).map((pm: any, i: number) => (
                       <tr key={`${pm.move.id}-${i}`} className="hover:bg-white/5 transition-colors">
                         <td className="px-4 py-2.5 font-medium text-white capitalize">{pm.move.name.replace(/-/g, ' ')}</td>
                         <td className="px-4 py-2.5"><TypeBadge type={pm.move.type} size="sm" /></td>
@@ -320,7 +320,7 @@ export default function PokemonDetail() {
           {/* ── Breeding ───────────────────────────────────── */}
           <Section ref={el => { sectionRefs.current.breeding = el; }} title="Breeding" icon={Egg}>
             <div className="grid grid-cols-2 gap-3">
-              <InfoCell label="Egg Groups" value={[pokemon.eggGroup1, pokemon.eggGroup2].filter(Boolean).map(capitalize).join(', ') || '—'} />
+              <InfoCell label="Egg Groups" value={pokemon.eggGroups?.map(capitalize).join(', ') || '—'} />
               <InfoCell label="Gender Ratio" value={formatGender(pokemon.genderRatio)} />
               <InfoCell label="Catch Rate" value={`${pokemon.captureRate ?? '—'}`} />
               <InfoCell label="Base Friendship" value={`${pokemon.baseFriendship ?? '—'}`} />

@@ -292,9 +292,9 @@ function PokemonListRow({ pokemon }: { pokemon: any }) {
       <div className="flex-1">
         <span className="font-heading font-bold text-white capitalize">{pokemon.name}</span>
         <div className="flex gap-2 mt-1">
-          {pokemon.types.map((t: string) => (
+          {pokemon.types?.map((t: string) => (
             <span key={t} className="text-[10px] font-bold uppercase px-2 py-0.5 rounded text-white"
-              style={{ backgroundColor: `color-mix(in srgb, var(--color-type-${t.toLowerCase()}) 60%, black)` }}>{t}</span>
+              style={{ backgroundColor: `color-mix(in srgb, var(--color-type-${t?.toLowerCase() || 'normal'}) 60%, black)` }}>{t}</span>
           ))}
         </div>
       </div>

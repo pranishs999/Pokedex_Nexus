@@ -41,9 +41,10 @@ This Local Setup document details the step-by-step installation instructions, en
 
 Before checking out the repository, ensure your development machine has these tools installed:
 
-- **Node.js:** v20.x LTS or higher.
-- **pnpm:** v8.x or higher (Enforces workspace resolution).
-- **Docker Engine & Compose:** Required for running the database container locally without native installations.
+- **Node.js:** v22.x LTS or higher.
+- **pnpm:** v9.x or higher (Enforces workspace resolution).
+- **Docker or Podman Engine:** Required for running the database container locally.
+- **Rust & Cargo:** Required for compiling the Tauri desktop target.
 - **Git:** v2.x or higher.
 
 ---
@@ -62,9 +63,10 @@ Before checking out the repository, ensure your development machine has these to
    ```
 
 3. **Configure Environment Variables:**
-   Copy the example environment template to create your local variables configuration file:
+   Create a `.env` file in the root directory:
    ```bash
-   cp apps/api/.env.example apps/api/.env
+   PORT=3000
+   DATABASE_URL=postgresql://pkmp_admin:pkmp_dev_password@localhost:5432/pkmp
    ```
 
 ---
@@ -74,20 +76,21 @@ Before checking out the repository, ensure your development machine has these to
 To spin up the database and populate it with official data, run:
 
 1. **Start PostgreSQL Container:**
+   Using Podman:
    ```bash
-   docker-compose up -d postgres redis
+   podman run --name pkmp_postgres -e POSTGRES_DB=pkmp -e POSTGRES_USER=pkmp_admin -e POSTGRES_PASSWORD=pkmp_dev_password -p 5432:5432 -d postgres:16-alpine
    ```
 
 2. **Execute Database Migrations:**
-   Applies the 3NF table schemas to the local database:
+   Applies the table schemas to the local database:
    ```bash
-   pnpm --filter @pkmp/types db:migrate
+   pnpm --filter @workspace/db run push
    ```
 
 3. **Execute Idempotent Seeding Pipeline:**
-   Reads JSON datasets and imports entries into the database:
+   Imports entries into the database:
    ```bash
-   pnpm --filter @pkmp/types db:seed
+   pnpm --filter @workspace/db run seed
    ```
 
 ---
@@ -96,16 +99,28 @@ To spin up the database and populate it with official data, run:
 
 Verify your environment by launching the local development servers:
 
-- **Launch All Services:**
-  Starts the React client on port `5173` and the NestJS API on port `3000`:
+- **Launch Web Services:**
+  Starts the API server and frontend client:
   ```bash
-   pnpm dev
-   ```
+  pnpm dev
+  ```
+
+- **Launch Tauri Desktop Application:**
+  Starts the Tauri v2 desktop shell window:
+  ```bash
+  pnpm tauri dev
+  ```
+
+- **Build Tauri Desktop Application:**
+  Compiles the desktop binary:
+  ```bash
+  pnpm tauri build --no-bundle
+  ```
 
 - **Verification Tests:**
   Confirm that services compile and communicate by checking the logs:
-  - React Web Page: Navigating to `http://localhost:5173` displays the Home search view.
-  - NestJS Swagger Docs: Navigating to `http://localhost:3000/api/docs` displays the API playground interface.
+  - React Web Page: Navigating to `http://localhost:3000` displays the Home search view.
+  - Tauri Window: Opens the desktop application directly, fetching data from `http://localhost:8080` (API Server).
 
 ---
 

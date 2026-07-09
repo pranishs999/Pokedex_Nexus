@@ -237,7 +237,7 @@ async function main() {
 
   // 1. Clear existing data (order respects FK constraints)
   console.log("  Clearing existing data…");
-  await db.delete(formsTable);
+  // await db.delete(formsTable); // skipped to avoid missing table error
   await db.delete(evolutionsTable);
   await db.delete(pokemonAbilitiesTable);
   await db.delete(pokemonTypesTable);

@@ -1,22 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSearch } from '@workspace/api-client-react'; // assuming a generated hook exists
+import { useSearch, type SearchResult } from '@workspace/api-client-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-interface SearchResult {
-  id: string;
-  name: string;
-  type: string;
-}
+const categoryColorMap: Record<string, string> = {
+  pokemon: 'var(--color-type-normal)',
+  move: 'var(--color-type-fire)',
+  ability: 'var(--color-type-grass)',
+};
 
 export function SearchAutocomplete({ placeholder = 'Search…' }: { placeholder?: string }) {
   const [query, setQuery] = useState('');
-  const { data: results = [], isLoading } = useSearch({
-    query: { enabled: query.length > 0 },
-    request: { params: { q: query } } as any,
+  const { data: searchData, isLoading } = useSearch({
+    q: query,
+  }, {
+    query: { enabled: query.length > 0 } as any,
   });
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const results = searchData?.results || [];
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -56,7 +59,7 @@ export function SearchAutocomplete({ placeholder = 'Search…' }: { placeholder?
             )}
             {results.map((item: SearchResult) => (
               <li
-                key={item.id}
+                key={`${item.category}-${item.id}`}
                 className={cn(
                   'px-4 py-2 cursor-pointer hover:bg-white/5 hover:text-white flex items-center gap-2',
                 )}
@@ -67,7 +70,7 @@ export function SearchAutocomplete({ placeholder = 'Search…' }: { placeholder?
               >
                 <span
                   className="inline-block w-2 h-2 rounded-full"
-                  style={{ backgroundColor: `var(--color-type-${item.type.toLowerCase()})` }}
+                  style={{ backgroundColor: categoryColorMap[item.category] || 'var(--color-muted)' }}
                 />
                 {item.name}
               </li>

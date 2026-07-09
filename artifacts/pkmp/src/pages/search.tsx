@@ -33,7 +33,7 @@ export default function SearchPage() {
     type: type !== 'all' ? type : undefined,
     limit: 50
   }, {
-    query: { enabled: debouncedQuery.length > 1, queryKey: [] as unknown[] } as any
+    query: { enabled: debouncedQuery.length > 1 } as any
   });
 
   const getCategoryIcon = (cat: string) => {

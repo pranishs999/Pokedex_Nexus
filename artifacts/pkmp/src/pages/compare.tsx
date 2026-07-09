@@ -12,7 +12,7 @@ export default function ComparePage() {
   const [newId, setNewId] = useState('');
 
   const { data: comparedPokemon, isLoading } = useComparePokemon({ ids: idsToCompare }, {
-    query: { enabled: idsToCompare.length > 0, queryKey: [] as unknown[] } as any
+    query: { enabled: idsToCompare.length > 0 } as any
   });
 
   const handleAdd = (e: React.FormEvent) => {

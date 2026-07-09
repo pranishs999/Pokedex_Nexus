@@ -85,6 +85,7 @@ export function normalizePokemonDetail(pokemon: any, species: any) {
     captureRate: species.capture_rate ?? 45,
     baseFriendship: species.base_happiness ?? 70,
     growthRate: growthMap[species.growth_rate?.name ?? "medium"] ?? "medium",
+    eggGroups,
     eggGroup1: eggGroups[0] ?? null,
     eggGroup2: eggGroups[1] ?? null,
     abilities,

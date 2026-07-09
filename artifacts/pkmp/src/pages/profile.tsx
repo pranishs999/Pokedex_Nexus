@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 export default function Profile() {
   const [, setLocation] = useLocation();
   const { user, isAuthenticated, isLoading } = useAuth();
-  const updateProfileMutation = useUpdateProfile();
+  const updateProfileMutation = useUpdateProfile({ request: { credentials: 'include' } as any });
   
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -42,11 +42,8 @@ export default function Profile() {
         data: {
           username,
           email,
-          avatarUrl: avatarUrl || null,
+          avatarUrl: avatarUrl || undefined,
         },
-        request: {
-          credentials: "include",
-        } as any,
       });
       toast.success('Profile updated successfully!');
     } catch (err: any) {

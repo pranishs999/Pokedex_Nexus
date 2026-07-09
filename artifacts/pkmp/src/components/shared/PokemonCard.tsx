@@ -25,7 +25,7 @@ export function PokemonCard({ pokemon, index = 0 }: PokemonCardProps) {
   const { isLiked, toggle } = useFavorites();
   const [isHovered, setIsHovered] = useState(false);
   const favorited = isLiked(pokemon.nationalDexNumber);
-  const mainType = pokemon.types[0]?.toLowerCase() || 'normal';
+  const mainType = pokemon.types?.[0]?.toLowerCase() ?? 'normal';
 
   const rarity = pokemon.isLegendary ? { label: 'Legendary', color: 'text-yellow-300', bg: 'bg-yellow-400/10 border-yellow-400/20' }
     : pokemon.isMythical ? { label: 'Mythical', color: 'text-pink-300', bg: 'bg-pink-400/10 border-pink-400/20' }
@@ -94,7 +94,7 @@ export function PokemonCard({ pokemon, index = 0 }: PokemonCardProps) {
                 {pokemon.name}
               </h3>
               <div className="flex flex-wrap gap-1.5 mb-2">
-                {pokemon.types.map(type => <TypeBadge key={type} type={type} size="sm" />)}
+                {pokemon.types?.map(type => <TypeBadge key={type} type={type} size="sm" />)}
               </div>
 
               {/* Gen + region */}

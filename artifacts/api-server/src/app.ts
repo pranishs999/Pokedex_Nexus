@@ -15,7 +15,7 @@ if (!SESSION_SECRET) {
 const allowedOrigins = [
   ...(process.env.REPLIT_DOMAINS?.split(",").map((d) => `https://${d.trim()}`) ?? []),
   ...(process.env.REPLIT_DEV_DOMAIN ? [`https://${process.env.REPLIT_DEV_DOMAIN}`] : []),
-  ...(process.env.NODE_ENV !== "production" ? ["http://localhost:25137", "http://localhost:5173"] : []),
+  ...(process.env.NODE_ENV !== "production" ? ["http://localhost:25137", "http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:3000"] : []),
 ];
 
 const app: Express = express();

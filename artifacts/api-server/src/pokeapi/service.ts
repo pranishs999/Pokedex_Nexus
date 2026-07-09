@@ -35,6 +35,7 @@ export interface PokemonDetail extends PokemonSummary {
   shape: string; habitat: string | null; genderRatio: number | null;
   captureRate: number; baseFriendship: number; growthRate: string;
   eggGroup1: string | null; eggGroup2: string | null;
+  eggGroups: string[];
   abilities: { name: string; isHidden: boolean; slot: number }[];
   evolutionChainUrl: string | null;
 }

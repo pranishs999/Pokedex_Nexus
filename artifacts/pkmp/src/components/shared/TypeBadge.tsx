@@ -29,7 +29,7 @@ const typeColors: Record<string, string> = {
 };
 
 export function TypeBadge({ type, className, size = 'md' }: TypeBadgeProps) {
-  const typeLower = type.toLowerCase();
+  const typeLower = type?.toLowerCase() || 'normal';
   const color = typeColors[typeLower] || 'var(--color-muted)';
 
   const sizeClasses = {
@@ -52,7 +52,7 @@ export function TypeBadge({ type, className, size = 'md' }: TypeBadgeProps) {
         textShadow: '0 1px 2px rgba(0,0,0,0.5)',
       }}
     >
-      {type}
+      {type || 'Normal'}
     </span>
   );
 }

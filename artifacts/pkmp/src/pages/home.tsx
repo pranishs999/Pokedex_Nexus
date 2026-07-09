@@ -151,7 +151,7 @@ export default function Home() {
             <motion.div key={t.name} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.04 }} whileHover={{ scale: 1.06 }}>
               <Link href={`/pokedex?type=${t.name}`}>
                 <div className="rounded-xl px-3 py-3 text-center font-bold text-sm uppercase tracking-wide text-white cursor-pointer transition-all hover:brightness-110 border border-white/10 relative overflow-hidden"
-                  style={{ backgroundColor: `color-mix(in srgb, var(--color-type-${t.name.toLowerCase()}) 70%, black)` }}>
+                  style={{ backgroundColor: `color-mix(in srgb, var(--color-type-${t.name?.toLowerCase() || 'normal'}) 70%, black)` }}>
                   <span className="relative z-10 drop-shadow">{t.name}</span>
                   {t.count > 0 && <div className="text-[10px] font-normal opacity-70 mt-0.5">{t.count}</div>}
                 </div>
