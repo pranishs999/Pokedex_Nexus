@@ -1,5 +1,11 @@
 # See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
+# Environment / secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
 # compiled output
 dist
 tmp
@@ -47,3 +53,6 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Large/generated datasets
+data/pokemon_data.json
